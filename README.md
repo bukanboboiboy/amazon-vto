@@ -1,1 +1,3 @@
-# amazon-vto
+# Amazon-vto
+
+Mau belajar aja...
