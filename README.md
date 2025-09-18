@@ -1,6 +1,15 @@
 # Amazon-vto
+Saya mulai belajar di sini karena saya berfikir untuk membuat Virtual Try-On. Awal project ini ingin aku buat karena saya sempat jadi shopee affiliator dengan membuat konten dari AI, dengan mengupload foto produk dan model di GenAI lalu membuatkan saya bentuknya di badan model yang aku berikan.
+Kemudian saya berfikir instead of use that method, kenapa tidak biarkan pelanggan saja yang mencoba baju itu di foto mereka sendiri? Jadi lah aku berencana untuk membuatnya.
+Beberapa setelah itu (aku belum mulai project sih, masih rencana wkwkw), ada AWS hackathon yang salah satu pilihan use casenya itu ada Fashion dan Kriya. Pada use case Fashion, kita diminta untuk membuat Try-On.
 
-Tadi saya coba pakai Amazon Q Dev untuk VSCode. Terus saya coba bagaimana menggunakannya untuk java script. Ternyata cukup bagus untuk saya yang tidak andal dalam hal ini. Selain Amazon Q ini, saya juga coba pakai Gemini Code Assist untuk menjawab beberapa pertanyaan seperti fungsi yang disarankan oleh Amazon Q.
+![alt text](image.png)
+
+Okedeh itu dulu. Nanti kita lanjut
+
+## Perkenalan Amazon
+
+Hari ini saya coba pakai Amazon Q Dev untuk VSCode. Terus saya coba bagaimana menggunakannya untuk java script. Ternyata cukup bagus untuk saya yang tidak andal dalam hal ini. Selain Amazon Q ini, saya juga coba pakai Gemini Code Assist untuk menjawab beberapa pertanyaan seperti fungsi yang disarankan oleh Amazon Q.
 
 Di Amazon Q —namanya terlalu panjang, kita singkat saja jadi Q— saya coba minta dibuatkan fungsi untuk menghitung luas persegi, persegi panjang, dan segitiga. Terus saya dibuatkan fungsi perhitungan luas bangun itu berikut dengan fungsi untuk print value dari hasil perhitungannya. Di Q juga saya dikasih saran untuk menggunakan 2 opsi penggunaan function, ada arrow function dan ada juga regular function untuk membuat fungsi yang lebih kompleks.
 
@@ -34,3 +43,8 @@ const rectangleArea = shapeCalculators.calculateRectangleArea(length, width);
 console.log(`Luas persegi panjang dengan panjang  dan lebar  adalah `); // Output: Luas persegi panjang dengan panjang 8 dan lebar 5 adalah 40.
 
 Singkatnya, module.exports adalah cara untuk membuat kode Anda modular dan dapat digunakan kembali di berbagai bagian aplikasi kita.
+
+
+
+## Belajar Javascript
+

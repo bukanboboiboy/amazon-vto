@@ -12,9 +12,3 @@ const triangle = calculateTriangleArea(6, 4);
 console.log(triangle);
 
 console.log('The End');
-
-module.exports = {
-  calculateSquareArea,
-  calculateRectangleArea,
-  calculateTriangleArea,
-};
