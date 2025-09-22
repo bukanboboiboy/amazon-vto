@@ -147,20 +147,29 @@ generateBtn.addEventListener('click', () => {
     generateBtn.disabled = true; // Nonaktifkan tombol selama proses
 
     // ==========================================================
-    // DI SINI NANTINYA KITA AKAN MENULIS KODE 'FETCH' API
-    // UNTUK MENGIRIM DATA KE BACK-END AWS LAMBDA
-    // UNTUK SEKARANG, KITA SIMULASIKAN SAJA DENGAN JEDA 3 DETIK
+    // INI ADALAH PANGGILAN API (FETCH) KE BACK-END AWS LAMBDA
     // ==========================================================
-    
-    setTimeout(() => {
-        console.log('Proses selesai (ini hanya simulasi).');
-        
-        // Sembunyikan loading dan aktifkan tombol kembali
+
+    // Gabungkan Invoke URL dengan nama route-nya
+    const apiUrl = 'https://2vf4avt2ih.execute-api.us-east-1.amazonaws.com/generate-vto';
+
+    fetch(apiUrl, {
+        method: 'POST', // Method harus POST sesuai yang kita atur di API Gateway
+        // headers dan body untuk mengirim gambar akan kita tambahkan nanti
+        // Untuk tes pertama, kita panggil saja dulu
+    })
+    .then(response => response.json()) // Ambil respons dan ubah menjadi format JSON
+    .then(data => {
+        console.log('Sukses! Respons dari Lambda:', data);
+        alert(data.message); // Tampilkan pesan dari Lambda: "Hello from Lambda!..."
+    })
+    .catch(error => {
+        console.error('Gagal memanggil API:', error);
+        alert('Oops, terjadi error. Cek console untuk detailnya.');
+    })
+    .finally(() => {
+        // Apapun hasilnya (sukses atau gagal), sembunyikan loading
         loadingIndicator.style.display = 'none';
         generateBtn.disabled = false;
-
-        // Nanti di sini kita akan menampilkan gambar hasil
-        alert('Gambar hasil akan muncul di sini!');
-
-    }, 3000); // Jeda 3000 milidetik = 3 detik
+    });
 });
