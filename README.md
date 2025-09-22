@@ -52,3 +52,8 @@ Untuk menjalan source code atau program Javascript, kita butuh yang namanya runt
 Kita bisa menjalankan aplikasi dengan mengetik node [file.js]. Kalo dengan bun, kita bisa menggunakan bun run [file.js] atau bisa hanya dengan menggunakan bun [file.js]. Command itu bisa digunakan di terminal untuk menjalankan program Javascript yang telah kita buat.
 Untuk menjalankan runtime kita juga bisa menggunakan REPL atau Read-Eval-Print-Loop untuk langsung mengetik kode yang akan dijalankan di runtime tadi. Kita tidak perlu menaruhnya dalam sebuah script untuk menjalankan perintah itu.
 
+
+
+***KARENA TERLALU LAMA, AKHIRNYA SAYA MEMUTUSKAN UNTUK LANGSUNG MERAKIT WEBSITE VTO KU***
+
+
