@@ -48,3 +48,7 @@ Singkatnya, module.exports adalah cara untuk membuat kode Anda modular dan dapat
 
 ## Belajar Javascript
 
+Untuk menjalan source code atau program Javascript, kita butuh yang namanya runtime environment. Ada dua runtime envi yang bisa kita gunakan, yaitu node dan bun.
+Kita bisa menjalankan aplikasi dengan mengetik node [file.js]. Kalo dengan bun, kita bisa menggunakan bun run [file.js] atau bisa hanya dengan menggunakan bun [file.js]. Command itu bisa digunakan di terminal untuk menjalankan program Javascript yang telah kita buat.
+Untuk menjalankan runtime kita juga bisa menggunakan REPL atau Read-Eval-Print-Loop untuk langsung mengetik kode yang akan dijalankan di runtime tadi. Kita tidak perlu menaruhnya dalam sebuah script untuk menjalankan perintah itu.
+

@@ -1,0 +1,57 @@
+body {
+    font-family: sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    text-align: center;
+    padding: 20px;
+}
+
+.main-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.image-preview-container {
+    margin-top: 20px;
+    width: 300px;
+    height: 400px;
+    border: 2px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+}
+
+#imagePreview {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.product-choices {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Tampilkan 4 gambar per baris */
+    gap: 10px;
+    max-height: 400px; /* Beri tinggi maksimal agar bisa di-scroll */
+    overflow-y: auto; /* Aktifkan scroll vertikal jika gambar banyak */
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.baju-pilihan {
+    width: 100%;
+    cursor: pointer;
+    border: 3px solid transparent; /* Border transparan agar layout tidak goyang */
+    border-radius: 5px;
+    transition: border-color 0.2s;
+}
+
+.baju-pilihan:hover {
+    border-color: #ddd;
+}
+
+.baju-pilihan.terpilih {
+    border-color: #007bff; /* Warna biru untuk highlight */
+}
