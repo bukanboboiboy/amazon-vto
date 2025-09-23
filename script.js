@@ -137,38 +137,48 @@ generateBtn.addEventListener('click', async () => {
 
     // FUNGSI BARU UNTUK MENGECILKAN GAMBAR
     const resizeImage = (file, maxSize) => new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
-            const img = new Image();
-            img.src = event.target.result;
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                let { width, height } = img;
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let { width, height } = img;
 
-                if (width > height) {
-                    if (width > maxSize) {
-                        height *= maxSize / width;
-                        width = maxSize;
-                    }
-                } else {
-                    if (height > maxSize) {
-                        width *= maxSize / height;
-                        height = maxSize;
-                    }
+            // Logika resize yang sama seperti sebelumnya
+            if (width > height) {
+                if (width > maxSize) {
+                    height *= maxSize / width;
+                    width = maxSize;
                 }
+            } else {
+                if (height > maxSize) {
+                    width *= maxSize / height;
+                    height = maxSize;
+                }
+            }
 
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                // Kembalikan sebagai Base64, ambil hanya datanya
-                resolve(canvas.toDataURL('image/jpeg').split(',')[1]);
-            };
-            img.onerror = reject;
+            // FUNGSI BARU: Pastikan width dan height adalah kelipatan 64
+            const roundTo64 = (x) => Math.round(x / 64) * 64;
+            width = roundTo64(width);
+            height = roundTo64(height);
+
+            // Jika pembulatan membuat salah satu dimensi jadi 0, set ke 64
+            if (width === 0) width = 64;
+            if (height === 0) height = 64;
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            resolve(canvas.toDataURL('image/jpeg').split(',')[1]);
         };
-        reader.onerror = reject;
-    });
+        img.onerror = reject;
+    };
+    reader.onerror = reject;
+});
 
     try {
         // Panggil fungsi resize dengan batas maksimal 1024 piksel
