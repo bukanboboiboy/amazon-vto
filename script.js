@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     generateBtn.addEventListener('click', async () => {
         const userImageFile = imageUpload.files[0];
         if (!userImageFile || !bajuTerpilihElement) {
-            alert('Silakan unggah foto DAN pilih pakaian terlebih dahulu!');
+            alert('Silakan unggah foto dan pilih pakaian terlebih dahulu!');
             return;
         }
 
