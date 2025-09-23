@@ -3,33 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VTO Project</title>
+    <meta name="dicoding:email" content="muhisra09@gmail.com">
+    <title>AI Virtual Try-On | AWS Hackathon Project</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <h1>Virtual Try-On Project</h1>
-
-    <div class="main-container">
-        <div class="user-photo-section">
-            <h2>1. Unggah Fotomu</h2>
-            <input type="file" id="imageUpload" accept="image/*">
-            <div class="image-preview-container">
-                <img id="imagePreview" src="" alt="Pratinjau Foto Pengguna">
-            </div>
+    <header>
+        <div class="header-content">
+            <h1>Virtual Try-On</h1>
         </div>
+    </header>
 
-        <div class="product-section">
-            <h2>2. Pilih Pakaian</h2>
-            <div class="product-choices">
-
+    <main class="main-container">
+        
+        <section class="input-column">
+            <div class="step-card">
+                <h2>1. Unggah Fotomu</h2>
+                <p>Pilih foto seluruh badan dengan pose natural.</p>
+                <label for="imageUpload" class="custom-file-upload">Pilih File</label>
+                <input type="file" id="imageUpload" accept="image/*">
+                <span id="fileName">Belum ada file dipilih</span>
             </div>
-    
+            
+            <div class="step-card">
+                <h2>2. Pilih Pakaian</h2>
+                <p>Klik pada salah satu item di bawah ini.</p>
+                <div class="product-gallery">
+                    </div>
+            </div>
+
             <button id="generateBtn">Buat Ajaib!</button>
-            <div id="loadingIndicator" style="display: none;">Memproses...</div>
-        </div>  
+        </section>
+
+        <section class="output-column">
+            <div class="result-container" id="resultContainer" style="display: none;">
+                <div class="result-image-wrapper">
+                    <h3>Before</h3>
+                    <img id="beforeImage" src="" alt="Foto Asli Pengguna">
+                </div>
+                <div class="result-image-wrapper">
+                    <h3>After</h3>
+                    <div class="image-placeholder" id="afterPlaceholder">
+                        <p>Hasil AI akan muncul di sini</p>
+                    </div>
+                    <img id="afterImage" src="" alt="Hasil Virtual Try-On" class="result-image-clickable" style="display: none;">
+                    <div class="result-actions" id="afterActions" style="display: none;">
+                        <a id="downloadBtn" href="#" download="hasil-vto.png">Download</a>
+                    </div>
+                </div>
+            </div>
+             <div class="placeholder-text" id="placeholderText">
+                <p>Hasil perbandingan "Before & After" akan muncul di sini.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="loadingModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="spinner"></div>
+            <h2>AI Sedang Bekerja...</h2>
+            <p>Mohon tunggu, proses ini bisa memakan waktu hingga 30 detik.</p>
+        </div>
     </div>
 
+    <div id="lightboxModal" class="modal-overlay" style="display: none;">
+        <span class="close-button">&times;</span>
+        <img class="lightbox-content" id="lightboxImage">
+    </div>
+
+    <footer>
+        <p>Bukan Boboiboy</p>
+    </footer>
     
     <script src="script.js"></script>
 </body>
