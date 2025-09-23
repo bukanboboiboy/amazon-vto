@@ -51,7 +51,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. Daftar Baju (tambahkan nama file gambar yang ada di folder assets)
     const daftarBaju = [
-
+        "20250923_2020_Denim on Display_simple_compose_01k5v89a7vfc78ksaf0vexagjs.png",
+        "20250923_2020_Denim on Display_simple_compose_01k5v89a7xfhkbetbm161tbc2k.png",
+        "20250923_2024_Black Bomber Jacket_simple_compose_01k5v8ghs4frt9k9tfxtbm6pbs.png",
+        "20250923_2025_Red Shirt Display_simple_compose_01k5v8jgyfer99nh7mjak1j0dv.png",
+        "20250923_2027_Long Sleeve Elegance_simple_compose_01k5v8mh7sev79ep99ts3whkep.png",
+        "20250923_2029_Red Flannel Shirt_simple_compose_01k5v8rjabekpschrcsgfqvasx.png",
+        "20250923_2030_Black Blazer Elegance_simple_compose_01k5v8vbq5fegv21g47yxxtaes.png",
+        "Gemini_Generated_Image_5qsly5qsly5qsly5.png",
+        "Gemini_Generated_Image_l4rczxl4rczxl4rc.png",
+        "Gemini_Generated_Image_o1vmilo1vmilo1vm.png",
+        "Gemini_Generated_Image_x0176ox0176ox017.png",
+        "Gemini_Generated_Image_xhvefvxhvefvxhve.png",
+        "Gemini_Generated_Image_yxhehoyxhehoyxhe.png"
     ];
 
     // 4. Buat galeri baju secara dinamis
