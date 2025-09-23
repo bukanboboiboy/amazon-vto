@@ -125,51 +125,81 @@ const generateBtn = document.getElementById('generateBtn');
 const loadingIndicator = document.getElementById('loadingIndicator');
 
 // Tambahkan event listener ke tombol
-generateBtn.addEventListener('click', () => {
-    // Cek dulu apakah pengguna sudah upload foto DAN memilih baju
+generateBtn.addEventListener('click', async () => {
     const userImageFile = imageUpload.files[0];
-    if (!userImageFile) {
-        alert('Silakan unggah fotomu terlebih dahulu!');
-        return;
-    }
-    if (!bajuTerpilih) {
-        alert('Silakan pilih salah satu pakaian!');
+    if (!userImageFile || !bajuTerpilih) {
+        alert('Silakan unggah foto DAN pilih pakaian terlebih dahulu!');
         return;
     }
 
-    // Jika sudah lengkap, kita mulai prosesnya
-    console.log('Mulai proses generate...');
-    console.log('Foto Pengguna:', userImageFile.name);
-    console.log('Baju Dipilih:', bajuTerpilih);
-
-    // Tampilkan loading
     loadingIndicator.style.display = 'block';
-    generateBtn.disabled = true; // Nonaktifkan tombol selama proses
+    generateBtn.disabled = true;
 
-    // ==========================================================
-    // INI ADALAH PANGGILAN API (FETCH) KE BACK-END AWS LAMBDA
-    // ==========================================================
+    // FUNGSI BARU UNTUK MENGECILKAN GAMBAR
+    const resizeImage = (file, maxSize) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let { width, height } = img;
 
-    // Gabungkan Invoke URL dengan nama route-nya
-    const apiUrl = 'https://2vf4avt2ih.execute-api.us-east-1.amazonaws.com/generate-vto';
+                if (width > height) {
+                    if (width > maxSize) {
+                        height *= maxSize / width;
+                        width = maxSize;
+                    }
+                } else {
+                    if (height > maxSize) {
+                        width *= maxSize / height;
+                        height = maxSize;
+                    }
+                }
 
-    fetch(apiUrl, {
-        method: 'POST', // Method harus POST sesuai yang kita atur di API Gateway
-        // headers dan body untuk mengirim gambar akan kita tambahkan nanti
-        // Untuk tes pertama, kita panggil saja dulu
-    })
-    .then(response => response.json()) // Ambil respons dan ubah menjadi format JSON
-    .then(data => {
-        console.log('Sukses! Respons dari Lambda:', data);
-        alert(data.message); // Tampilkan pesan dari Lambda: "Hello from Lambda!..."
-    })
-    .catch(error => {
-        console.error('Gagal memanggil API:', error);
-        alert('Oops, terjadi error. Cek console untuk detailnya.');
-    })
-    .finally(() => {
-        // Apapun hasilnya (sukses atau gagal), sembunyikan loading
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                // Kembalikan sebagai Base64, ambil hanya datanya
+                resolve(canvas.toDataURL('image/jpeg').split(',')[1]);
+            };
+            img.onerror = reject;
+        };
+        reader.onerror = reject;
+    });
+
+    try {
+        // Panggil fungsi resize dengan batas maksimal 1024 piksel
+        const userImageBase64 = await resizeImage(userImageFile, 1024);
+
+        const payload = {
+            userImage: userImageBase64,
+            clothingImage: bajuTerpilih
+        };
+
+        const apiUrl = 'https://2vf4avt2ih.execute-api.us-east-1.amazonaws.com/generate-vto';
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+            const resultImage = document.getElementById('imagePreview');
+            resultImage.src = `data:image/png;base64,${result.imageResult}`;
+        } else {
+            throw new Error(result.message || 'Gagal menghasilkan gambar VTO.');
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert(error.message);
+    } finally {
         loadingIndicator.style.display = 'none';
         generateBtn.disabled = false;
-    });
+    }
 });
