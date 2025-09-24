@@ -1,7 +1,3 @@
-// =======================================================
-// KODE LENGKAP FINAL UNTUK SCRIPT.JS (VERSI UPGRADE)
-// =======================================================
-
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Ambil elemen-elemen penting dari HTML
     const imageUpload = document.getElementById('imageUpload');
@@ -11,8 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Elemen baru
     const loadingModal = document.getElementById('loadingModal');
+    const outputSection = document.getElementById('outputSection');
     const resultContainer = document.getElementById('resultContainer');
-    const placeholderText = document.getElementById('placeholderText');
     const beforeImage = document.getElementById('beforeImage');
     const afterImage = document.getElementById('afterImage');
     const downloadBtn = document.getElementById('downloadBtn');
@@ -21,13 +17,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeButton = document.querySelector('.close-button');
     const afterPlaceholder = document.getElementById('afterPlaceholder');
     const afterActions = document.getElementById('afterActions');
+    const steps = document.querySelectorAll('.stepper .step');
+    const shareBtn = document.getElementById('shareBtn');
 
-    let originalImageSrc = null; // Untuk menyimpan gambar asli
+    let originalImageSrc = null;
     let bajuTerpilihElement = null;
 
-    // 2. Tampilkan nama file saat pengguna upload foto
-    // script.js (versi baru)
+    // Fungsi untuk update stepper
+    const updateStepper = (stepIndex) => {
+        steps.forEach((step, index) => {
+            if (index <= stepIndex) {
+                step.classList.add('active');
+            } else {
+                step.classList.remove('active');
+            }
+        });
+    };
 
+    // 2. Tampilkan nama file dan update UI saat pengguna upload foto
     imageUpload.addEventListener('change', function() {
         const file = this.files[0];
         if (file) {
@@ -35,9 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const reader = new FileReader();
             reader.onload = function(e) {
                 originalImageSrc = e.target.result;
-
-                placeholderText.style.display = 'none';
-                resultContainer.style.display = 'flex';
+                // Langsung tampilkan di 'before'
+                outputSection.style.display = 'block';
                 beforeImage.src = originalImageSrc;
                 
                 // Atur ulang tampilan 'After'
@@ -49,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 3. Daftar Baju (tambahkan nama file gambar yang ada di folder assets)
+    // 3. Daftar Baju (pastikan diisi dengan nama file di folder assets)
     const daftarBaju = [
         "20250923_2020_Denim on Display_simple_compose_01k5v89a7vfc78ksaf0vexagjs.png",
         "20250923_2020_Denim on Display_simple_compose_01k5v89a7xfhkbetbm161tbc2k.png",
@@ -65,6 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
         "Gemini_Generated_Image_xhvefvxhvefvxhve.png",
         "Gemini_Generated_Image_yxhehoyxhehoyxhe.png"
     ];
+
+
 
     // 4. Buat galeri baju secara dinamis
     daftarBaju.forEach(namaFile => {
@@ -84,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         galeriProduk.appendChild(imgElement);
     });
 
-    // 5. Fungsi final untuk memproses gambar (resize + ubah ke Base64)
+    // 5. Fungsi final untuk memproses gambar
     const processImage = (input) => new Promise((resolve, reject) => {
         const img = new Image();
         img.crossOrigin = "Anonymous";
@@ -92,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         img.onload = () => {
             const canvas = document.createElement('canvas');
             let { width, height } = img;
-            const MAX_PIXELS = 4194304; // Batas 4MP dari Nova Canvas
+            const MAX_PIXELS = 4194304;
 
             if (width * height > MAX_PIXELS) {
                 const ratio = Math.sqrt(MAX_PIXELS / (width * height));
@@ -125,12 +133,13 @@ document.addEventListener('DOMContentLoaded', () => {
     generateBtn.addEventListener('click', async () => {
         const userImageFile = imageUpload.files[0];
         if (!userImageFile || !bajuTerpilihElement) {
-            alert('Silakan unggah foto dan pilih pakaian terlebih dahulu!');
+            alert('Silakan unggah foto DAN pilih pakaian terlebih dahulu!');
             return;
         }
 
-        loadingModal.style.display = 'flex'; // Tampilkan modal loading
+        loadingModal.style.display = 'flex';
         generateBtn.disabled = true;
+        updateStepper(1); // Update stepper ke langkah 2
 
         try {
             const userImageBase64 = await processImage(userImageFile);
@@ -152,12 +161,30 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (response.ok && result.imageResult) {
                 // Tampilkan hasil
-                afterPlaceholder.style.display = 'none'; // Sembunyikan placeholder
-                afterImage.style.display = 'block'; // Tampilkan gambar hasil
-                afterActions.style.display = 'block'; // Tampilkan tombol download
-
+                afterPlaceholder.style.display = 'none';
+                afterImage.style.display = 'block';
+                afterActions.style.display = 'block';
                 afterImage.src = `data:image/png;base64,${result.imageResult}`;
                 downloadBtn.href = `data:image/png;base64,${result.imageResult}`;
+
+                if (navigator.share) { // Cek apakah browser mendukung Web Share API
+                    shareBtn.style.display = 'inline-block'; // Tampilkan tombol jika didukung
+
+                    shareBtn.onclick = async () => {
+                        try {
+                            const imageFile = await base64ToFile(result.imageResult, 'hasil-vto.png', 'image/png');
+                            await navigator.share({
+                                title: 'Hasil Virtual Try-On',
+                                text: 'Lihat baju baru yang aku coba dengan AI Virtual Try-On!',
+                                files: [imageFile]
+                            });
+                        } catch (err) {
+                            console.error("Gagal share:", err);
+                        }
+                    };
+                } else {
+                    shareBtn.style.display = 'none'; // Sembunyikan tombol jika tidak didukung (di desktop)
+                }
             } else {
                 throw new Error(result.message || 'Gagal menghasilkan gambar VTO.');
             }
@@ -165,8 +192,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error:', error);
             alert(error.message);
+            updateStepper(0); // Kembalikan stepper ke langkah 1 jika error
         } finally {
-            loadingModal.style.display = 'none'; // Sembunyikan modal loading
+            loadingModal.style.display = 'none';
             generateBtn.disabled = false;
         }
     });
@@ -186,4 +214,13 @@ document.addEventListener('DOMContentLoaded', () => {
             lightboxModal.style.display = 'none';
         }
     });
+
+    // Inisialisasi stepper ke langkah pertama
+    updateStepper(0);
 });
+
+async function base64ToFile(base64, filename, mimeType) {
+    const res = await fetch(`data:${mimeType};base64,${base64}`);
+    const blob = await res.blob();
+    return new File([blob], filename, { type: mimeType });
+}
