@@ -1,118 +1,70 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Ambil elemen-elemen penting dari HTML
-    const imageUpload = document.getElementById('imageUpload');
-    const fileNameSpan = document.getElementById('fileName');
-    const galeriProduk = document.querySelector('.product-gallery');
+    // === Bagian 1: Pengambilan Elemen DOM ===
+    const uploadView = document.getElementById('upload-view');
+    const editorView = document.getElementById('editor-view');
+    const resultView = document.getElementById('result-view');
+    const views = [uploadView, editorView, resultView];
+
+    // Elemen Upload
+    const fileInput = document.getElementById('fileInput');
+    const uploadButton = document.getElementById('uploadButton');
+    const dropArea = document.getElementById('drop-area');
+    const sampleImages = document.querySelectorAll('.sample-image');
+    const fullscreenDropOverlay = document.getElementById('fullscreen-drop-overlay');
+    // Tambahkan di bagian variabel DOM lainnya
+    const homeComparisonContainer = document.getElementById('homeComparisonContainer');
+    const homeAfterWrapper = document.querySelector('.home-after-wrapper');
+    const homeSliderHandle = document.querySelector('.home-slider-handle');
+
+
+    // Elemen Editor
+    const editorUserImage = document.getElementById('editorUserImage');
+    const reuploadBtn = document.getElementById('reuploadBtn');
+    const deleteBtn = document.getElementById('deleteBtn');
+    const editorProductGallery = document.getElementById('editorProductGallery');
     const generateBtn = document.getElementById('generateBtn');
-    
-    // Elemen baru
-    const loadingModal = document.getElementById('loadingModal');
-    const outputSection = document.getElementById('outputSection');
-    const resultContainer = document.getElementById('resultContainer');
-    const beforeImage = document.getElementById('beforeImage');
-    const afterImage = document.getElementById('afterImage');
+
+    // Elemen Hasil
+    const resultBeforeImage = document.getElementById('resultBeforeImage');
+    const resultAfterImage = document.getElementById('resultAfterImage');
     const downloadBtn = document.getElementById('downloadBtn');
-    const lightboxModal = document.getElementById('lightboxModal');
-    const lightboxImage = document.getElementById('lightboxImage');
-    const closeButton = document.querySelector('.close-button');
-    const afterPlaceholder = document.getElementById('afterPlaceholder');
-    const afterActions = document.getElementById('afterActions');
-    const steps = document.querySelectorAll('.stepper .step');
     const shareBtn = document.getElementById('shareBtn');
+    const tryAnotherBtn = document.getElementById('tryAnotherBtn');
 
-    let originalImageSrc = null;
-    let bajuTerpilihElement = null;
+    // Elemen Modal
+    const loadingModal = document.getElementById('loadingModal');
 
-    // Fungsi untuk update stepper
-    const updateStepper = (stepIndex) => {
-        steps.forEach((step, index) => {
-            if (index <= stepIndex) {
-                step.classList.add('active');
-            } else {
-                step.classList.remove('active');
+    // Variabel Global
+    let userImageFile = null;
+    let selectedClothingElement = null;
+    
+    // === Bagian 2: Manajemen Halaman (View) ===
+    const showView = (viewId) => {
+        views.forEach(view => {
+            view.classList.remove('active');
+            if (view.id === viewId) {
+                view.classList.add('active');
             }
         });
     };
 
-    // 2. Tampilkan nama file dan update UI saat pengguna upload foto
-    imageUpload.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            fileNameSpan.textContent = file.name;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                originalImageSrc = e.target.result;
-                // Langsung tampilkan di 'before'
-                outputSection.style.display = 'block';
-                beforeImage.src = originalImageSrc;
-                
-                // Atur ulang tampilan 'After'
-                afterPlaceholder.style.display = 'flex';
-                afterImage.style.display = 'none';
-                afterActions.style.display = 'none';
-            }
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // 3. Daftar Baju (pastikan diisi dengan nama file di folder assets)
-    const daftarBaju = [
-        "20250923_2020_Denim on Display_simple_compose_01k5v89a7vfc78ksaf0vexagjs.png",
-        "20250923_2020_Denim on Display_simple_compose_01k5v89a7xfhkbetbm161tbc2k.png",
-        "20250923_2024_Black Bomber Jacket_simple_compose_01k5v8ghs4frt9k9tfxtbm6pbs.png",
-        "20250923_2025_Red Shirt Display_simple_compose_01k5v8jgyfer99nh7mjak1j0dv.png",
-        "20250923_2027_Long Sleeve Elegance_simple_compose_01k5v8mh7sev79ep99ts3whkep.png",
-        "20250923_2029_Red Flannel Shirt_simple_compose_01k5v8rjabekpschrcsgfqvasx.png",
-        "20250923_2030_Black Blazer Elegance_simple_compose_01k5v8vbq5fegv21g47yxxtaes.png",
-        "Gemini_Generated_Image_5qsly5qsly5qsly5.png",
-        "Gemini_Generated_Image_l4rczxl4rczxl4rc.png",
-        "Gemini_Generated_Image_o1vmilo1vmilo1vm.png",
-        "Gemini_Generated_Image_x0176ox0176ox017.png",
-        "Gemini_Generated_Image_xhvefvxhvefvxhve.png",
-        "Gemini_Generated_Image_yxhehoyxhehoyxhe.png"
-    ];
-
-
-
-    // 4. Buat galeri baju secara dinamis
-    daftarBaju.forEach(namaFile => {
-        const imgElement = document.createElement('img');
-        imgElement.src = 'assets/' + namaFile;
-        imgElement.alt = namaFile;
-        imgElement.classList.add('baju-pilihan');
-        imgElement.crossOrigin = "Anonymous";
-
-        imgElement.addEventListener('click', () => {
-            document.querySelectorAll('.baju-pilihan').forEach(img => {
-                img.classList.remove('terpilih');
-            });
-            imgElement.classList.add('terpilih');
-            bajuTerpilihElement = imgElement;
-        });
-        galeriProduk.appendChild(imgElement);
-    });
-
-    // 5. Fungsi final untuk memproses gambar
+    // === Bagian 3: Logika Inti ===
     const processImage = (input) => new Promise((resolve, reject) => {
         const img = new Image();
         img.crossOrigin = "Anonymous";
-        
         img.onload = () => {
             const canvas = document.createElement('canvas');
             let { width, height } = img;
             const MAX_PIXELS = 4194304;
-
             if (width * height > MAX_PIXELS) {
                 const ratio = Math.sqrt(MAX_PIXELS / (width * height));
-                width *= ratio;
-                height *= ratio;
+                width = Math.round(width * ratio);
+                height = Math.round(height * ratio);
             }
-
-            canvas.width = Math.round(width);
-            canvas.height = Math.round(height);
+            canvas.width = width;
+            canvas.height = height;
             const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            
+            ctx.drawImage(img, 0, 0, width, height);
             resolve(canvas.toDataURL('image/jpeg', 0.9).split(',')[1]);
         };
         img.onerror = reject;
@@ -125,102 +77,222 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (input instanceof HTMLImageElement) {
             img.src = input.src;
         } else {
-            reject(new Error("Tipe input untuk proses gambar tidak valid"));
+            reject(new Error("Invalid image input type"));
         }
     });
 
-    // 6. Logika utama saat tombol "Buat Ajaib!" diklik
+    const handleImageUpload = (file) => {
+        userImageFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            editorUserImage.src = e.target.result;
+            resultBeforeImage.src = e.target.result;
+            showView('editor-view');
+        };
+        reader.readAsDataURL(file);
+    };
+    
+    async function base64ToFile(base64, filename, mimeType) {
+        const res = await fetch(`data:${mimeType};base64,${base64}`);
+        const blob = await res.blob();
+        return new File([blob], filename, { type: mimeType });
+    }
+
+    // === Bagian 4: Event Listeners ===
+    uploadButton.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) handleImageUpload(fileInput.files[0]);
+    });
+
+    // Logika Baru untuk Fullscreen Drag & Drop
+    window.addEventListener('dragenter', (e) => {
+        e.preventDefault();
+        // Tampilkan overlay hanya jika ada file yang diseret
+        if (e.dataTransfer.types.includes('Files')) {
+            fullscreenDropOverlay.classList.add('visible');
+        }
+    });
+
+    fullscreenDropOverlay.addEventListener('dragover', (e) => {
+        e.preventDefault();
+    });
+
+    fullscreenDropOverlay.addEventListener('dragleave', (e) => {
+        // Sembunyikan overlay saat kursor meninggalkan jendela
+        fullscreenDropOverlay.classList.remove('visible');
+    });
+
+    fullscreenDropOverlay.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fullscreenDropOverlay.classList.remove('visible');
+        if (e.dataTransfer.files.length > 0) {
+        // Gunakan fungsi yang sudah ada untuk memproses file
+        handleImageUpload(e.dataTransfer.files[0]);
+        }
+    });
+
+    sampleImages.forEach(img => {
+        img.addEventListener('click', async () => {
+            loadingModal.classList.add('visible');
+            const response = await fetch(img.dataset.src);
+            const blob = await response.blob();
+            const file = new File([blob], "sample_model.jpg", { type: "image/jpeg" });
+            handleImageUpload(file);
+            loadingModal.classList.remove('visible');
+        });
+    });
+
+    reuploadBtn.addEventListener('click', () => fileInput.click());
+    deleteBtn.addEventListener('click', () => {
+        userImageFile = null;
+        fileInput.value = '';
+        showView('upload-view');
+    });
+    
     generateBtn.addEventListener('click', async () => {
-        const userImageFile = imageUpload.files[0];
-        if (!userImageFile || !bajuTerpilihElement) {
-            alert('Silakan unggah foto DAN pilih pakaian terlebih dahulu!');
+        if (!userImageFile || !selectedClothingElement) {
+            alert('Silakan unggah foto DAN pilih pakaian!');
             return;
         }
 
-        loadingModal.style.display = 'flex';
-        generateBtn.disabled = true;
-        updateStepper(1); // Update stepper ke langkah 2
-
+        loadingModal.classList.add('visible');
+        
         try {
             const userImageBase64 = await processImage(userImageFile);
-            const clothingImageBase64 = await processImage(bajuTerpilihElement);
+            const clothingImageBase64 = await processImage(selectedClothingElement);
 
-            const payload = {
-                userImage: userImageBase64,
-                clothingImage: clothingImageBase64
-            };
-            
+            const payload = { userImage: userImageBase64, clothingImage: clothingImageBase64 };
             const apiUrl = 'https://2vf4avt2ih.execute-api.us-east-1.amazonaws.com/generate-vto';
+            
             const response = await fetch(apiUrl, {
-                method: 'POST',
-                body: JSON.stringify(payload),
-                headers: { 'Content-Type': 'application/json' }
+                method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'application/json' }
             });
 
             const result = await response.json();
             
             if (response.ok && result.imageResult) {
-                // Tampilkan hasil
-                afterPlaceholder.style.display = 'none';
-                afterImage.style.display = 'block';
-                afterActions.style.display = 'block';
-                afterImage.src = `data:image/png;base64,${result.imageResult}`;
-                downloadBtn.href = `data:image/png;base64,${result.imageResult}`;
-
-                if (navigator.share) { // Cek apakah browser mendukung Web Share API
-                    shareBtn.style.display = 'inline-block'; // Tampilkan tombol jika didukung
-
-                    shareBtn.onclick = async () => {
-                        try {
-                            const imageFile = await base64ToFile(result.imageResult, 'hasil-vto.png', 'image/png');
-                            await navigator.share({
-                                title: 'Hasil Virtual Try-On',
-                                text: 'Lihat baju baru yang aku coba dengan AI Virtual Try-On!',
-                                files: [imageFile]
-                            });
-                        } catch (err) {
-                            console.error("Gagal share:", err);
-                        }
-                    };
-                } else {
-                    shareBtn.style.display = 'none'; // Sembunyikan tombol jika tidak didukung (di desktop)
-                }
+                resultAfterImage.src = `data:image/png;base64,${result.imageResult}`;
+                showView('result-view');
             } else {
                 throw new Error(result.message || 'Gagal menghasilkan gambar VTO.');
             }
-
         } catch (error) {
             console.error('Error:', error);
-            alert(error.message);
-            updateStepper(0); // Kembalikan stepper ke langkah 1 jika error
+            alert(`Terjadi error: ${error.message}`);
         } finally {
-            loadingModal.style.display = 'none';
-            generateBtn.disabled = false;
+            loadingModal.classList.remove('visible');
         }
-    });
-
-    // 7. Logika Lightbox
-    afterImage.addEventListener('click', () => {
-        lightboxImage.src = afterImage.src;
-        lightboxModal.style.display = 'flex';
-    });
-
-    closeButton.addEventListener('click', () => {
-        lightboxModal.style.display = 'none';
     });
     
-    lightboxModal.addEventListener('click', (e) => {
-        if (e.target === lightboxModal) {
-            lightboxModal.style.display = 'none';
+    downloadBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        if (resultAfterImage.src && resultAfterImage.src.startsWith('data:')) {
+            const base64Data = resultAfterImage.src.split(',')[1];
+            const imageFile = await base64ToFile(base64Data, `result_vto_double-b_${Date.now()}.png`, 'image/png');
+            const url = URL.createObjectURL(imageFile);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `result_vto_double-b_${Date.now()}.png`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    });
+    
+    tryAnotherBtn.addEventListener('click', () => showView('editor-view'));
+    
+    shareBtn.addEventListener('click', async () => {
+        if (navigator.share && resultAfterImage.src) {
+            try {
+                const base64Data = resultAfterImage.src.split(',')[1];
+                const imageFile = await base64ToFile(base64Data, 'hasil-vto.png', 'image/png');
+                await navigator.share({
+                    title: 'Hasil Virtual Try-On',
+                    text: 'Lihat baju baru yang aku coba dengan AI Virtual Try-On!',
+                    files: [imageFile]
+                });
+            } catch (err) {
+                console.error("Gagal share:", err);
+            }
+        } else {
+            alert('Fitur share tidak didukung di browser ini, atau tidak ada gambar untuk di-share.');
         }
     });
 
-    // Inisialisasi stepper ke langkah pertama
-    updateStepper(0);
-});
+    // === Bagian 5: Inisialisasi Galeri & Halaman ===
+    const daftarBaju = [ "20250923_2020_Denim on Display_simple_compose_01k5v89a7vfc78ksaf0vexagjs.png", "20250923_2020_Denim on Display_simple_compose_01k5v89a7xfhkbetbm161tbc2k.png", "20250923_2024_Black Bomber Jacket_simple_compose_01k5v8ghs4frt9k9tfxtbm6pbs.png", "20250923_2025_Red Shirt Display_simple_compose_01k5v8jgyfer99nh7mjak1j0dv.png", "20250923_2027_Long Sleeve Elegance_simple_compose_01k5v8mh7sev79ep99ts3whkep.png", "20250923_2029_Red Flannel Shirt_simple_compose_01k5v8rjabekpschrcsgfqvasx.png", "20250923_2030_Black Blazer Elegance_simple_compose_01k5v8vbq5fegv21g47yxxtaes.png", "Gemini_Generated_Image_5qsly5qsly5qsly5.png", "Gemini_Generated_Image_l4rczxl4rczxl4rc.png", "Gemini_Generated_Image_o1vmilo1vmilo1vm.png", "Gemini_Generated_Image_x0176ox0176ox017.png", "Gemini_Generated_Image_xhvefvxhvefvxhve.png", "Gemini_Generated_Image_yxhehoyxhehoyxhe.png" ];
 
-async function base64ToFile(base64, filename, mimeType) {
-    const res = await fetch(`data:${mimeType};base64,${base64}`);
-    const blob = await res.blob();
-    return new File([blob], filename, { type: mimeType });
+    daftarBaju.forEach(namaFile => {
+        const img = document.createElement('img');
+        img.src = 'assets/' + namaFile;
+        img.alt = namaFile;
+        img.classList.add('baju-pilihan');
+        img.crossOrigin = "Anonymous";
+        img.addEventListener('click', () => {
+            document.querySelectorAll('.baju-pilihan').forEach(el => el.classList.remove('terpilih'));
+            img.classList.add('terpilih');
+            selectedClothingElement = img;
+        });
+        editorProductGallery.appendChild(img);
+    });
+
+    showView('upload-view'); // Mulai dari halaman upload
+    initHomeComparisonSlider();
+    
+});
+    // Tambahkan fungsi ini di paling bawah script.js
+    function initHomeComparisonSlider() {
+    const homeComparisonContainer = document.getElementById("homeComparisonContainer");
+    const homeAfterWrapper = document.querySelector(".home-after-wrapper");
+    const homeSliderHandle = document.querySelector(".home-slider-handle");
+
+    if (!homeComparisonContainer || !homeAfterWrapper || !homeSliderHandle) return;
+
+    let isDragging = false;
+
+    const moveSlider = (x) => {
+        const rect = homeComparisonContainer.getBoundingClientRect();
+        let position = ((x - rect.left) / rect.width) * 100;
+
+        // Batasi posisi antara 0 dan 100
+        position = Math.max(0, Math.min(100, position));
+
+        homeSliderHandle.style.left = position + '%';
+        homeAfterWrapper.style.clipPath = `inset(0 ${100 - position}% 0 0)`;
+    };
+
+    // Event listeners untuk desktop (mouse)
+    homeSliderHandle.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        homeSliderHandle.classList.add('active'); // Tambahkan kelas active untuk gaya saat di-drag
+    });
+    window.addEventListener('mouseup', () => {
+        isDragging = false;
+        homeSliderHandle.classList.remove('active');
+    });
+    window.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            moveSlider(e.clientX);
+        }
+    });
+
+    // Event listeners untuk mobile (touch)
+    homeSliderHandle.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        homeSliderHandle.classList.add('active');
+    });
+    window.addEventListener('touchend', () => {
+        isDragging = false;
+        homeSliderHandle.classList.remove('active');
+    });
+    window.addEventListener('touchmove', (e) => {
+        if (isDragging) {
+            moveSlider(e.touches[0].clientX);
+        }
+    });
+
+    // Posisikan slider di tengah saat pertama kali dimuat
+    moveSlider(homeComparisonContainer.getBoundingClientRect().left + homeComparisonContainer.offsetWidth / 2);
 }
+
+// Panggil fungsi saat halaman selesai dimuat
+window.addEventListener('load', initHomeComparisonSlider);
