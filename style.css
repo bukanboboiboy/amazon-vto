@@ -222,6 +222,22 @@ body {
     animation: spin 1s linear infinite; margin: 0 auto 1.5rem;
 }
 
+/* --- Modal Error --- */
+.modal-content.error {
+    border: 2px solid #ff4757;
+}
+.error-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+.error-close-btn {
+    background: var(--primary-accent-color);
+    color: white; border: none; padding: 0.8rem 2rem;
+    border-radius: 8px; font-weight: 600; cursor: pointer;
+    margin-top: 1rem; transition: opacity 0.2s;
+}
+.error-close-btn:hover { opacity: 0.9; }
+
 /* --- Styling untuk Fullscreen Drag & Drop --- */
 .drop-overlay {
     position: fixed;

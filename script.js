@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Elemen Modal
     const loadingModal = document.getElementById('loadingModal');
+    const errorModal = document.getElementById('errorModal');
+    const errorTitle = document.getElementById('errorTitle');
+    const errorMessage = document.getElementById('errorMessage');
+    const errorCloseBtn = document.getElementById('errorCloseBtn');
 
     // Variabel Global
     let userImageFile = null;
@@ -151,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     generateBtn.addEventListener('click', async () => {
         if (!userImageFile || !selectedClothingElement) {
-            alert('Silakan unggah foto DAN pilih pakaian!');
+            alert('Please upload a photo and choose an outfit!');
             return;
         }
 
@@ -174,11 +178,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 resultAfterImage.src = `data:image/png;base64,${result.imageResult}`;
                 showView('result-view');
             } else {
-                throw new Error(result.message || 'Gagal menghasilkan gambar VTO.');
+                throw new Error(result.message || 'Failed to produce a VTO image.');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert(`Terjadi error: ${error.message}`);
+            let customMessage = error.message || 'Failed to produce a VTO image.';
+            if (customMessage.includes('pixel count') || customMessage.includes('4194304')) {
+                customMessage = 'Your image is too perfect to be improved upon. Try again with another image.';
+            }
+            errorTitle.textContent = 'Oops! Something went wrong';
+            errorMessage.textContent = customMessage;
+            errorModal.classList.add('visible');
         } finally {
             loadingModal.classList.remove('visible');
         }
@@ -211,10 +221,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     files: [imageFile]
                 });
             } catch (err) {
-                console.error("Gagal share:", err);
+                console.error("Failure to share:", err);
             }
         } else {
-            alert('Fitur share tidak didukung di browser ini, atau tidak ada gambar untuk di-share.');
+            alert('The sharing feature is not supported in this browser, or there are no images to share.');
         }
     });
 
@@ -233,6 +243,11 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedClothingElement = img;
         });
         editorProductGallery.appendChild(img);
+    });
+
+    // Error modal close handler
+    errorCloseBtn.addEventListener('click', () => {
+        errorModal.classList.remove('visible');
     });
 
     showView('upload-view'); // Mulai dari halaman upload
