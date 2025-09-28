@@ -208,6 +208,7 @@ body {
     display: none; align-items: center; justify-content: center;
     z-index: 1000; backdrop-filter: blur(5px);
     opacity: 0; transition: opacity 0.3s;
+    padding: 16px;
 }
 .modal-overlay.visible { display: flex; opacity: 1; }
 .modal-content {
