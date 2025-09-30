@@ -1,59 +1,63 @@
-# Amazon-vto
-Saya mulai belajar di sini karena saya berfikir untuk membuat Virtual Try-On. Awal project ini ingin aku buat karena saya sempat jadi shopee affiliator dengan membuat konten dari AI, dengan mengupload foto produk dan model di GenAI lalu membuatkan saya bentuknya di badan model yang aku berikan.
-Kemudian saya berfikir instead of use that method, kenapa tidak biarkan pelanggan saja yang mencoba baju itu di foto mereka sendiri? Jadi lah aku berencana untuk membuatnya.
-Beberapa setelah itu (aku belum mulai project sih, masih rencana wkwkw), ada AWS hackathon yang salah satu pilihan use casenya itu ada Fashion dan Kriya. Pada use case Fashion, kita diminta untuk membuat Try-On.
+# 🤖 AI Virtual Try-On
 
-![alt text](image.png)
+*Sebuah proyek untuk AWS Back-End Academy 2025 Online Hackathon: AI for Creative Economy.*
 
-Okedeh itu dulu. Nanti kita lanjut
+Coba baju favoritmu tanpa harus ke fitting room! Aplikasi web inovatif ini memungkinkan pengguna untuk mencoba pakaian secara virtual menggunakan kekuatan AI generatif dari Amazon Web Services.
 
-## Perkenalan Amazon
+**Link Aplikasi yang Sudah di-Deploy: https://bukanboboiboy-vto.vercel.app/**
 
-Hari ini saya coba pakai Amazon Q Dev untuk VSCode. Terus saya coba bagaimana menggunakannya untuk java script. Ternyata cukup bagus untuk saya yang tidak andal dalam hal ini. Selain Amazon Q ini, saya juga coba pakai Gemini Code Assist untuk menjawab beberapa pertanyaan seperti fungsi yang disarankan oleh Amazon Q.
+---
 
-Di Amazon Q —namanya terlalu panjang, kita singkat saja jadi Q— saya coba minta dibuatkan fungsi untuk menghitung luas persegi, persegi panjang, dan segitiga. Terus saya dibuatkan fungsi perhitungan luas bangun itu berikut dengan fungsi untuk print value dari hasil perhitungannya. Di Q juga saya dikasih saran untuk menggunakan 2 opsi penggunaan function, ada arrow function dan ada juga regular function untuk membuat fungsi yang lebih kompleks.
+### ✨ Demo Aplikasi
 
-Saya coba pakai Gemini Code Assist untuk menjawab pertanyaan tentang bagaimana cara membuat fungsi di java script. Saya minta dibuatkan fungsi untuk menghitung luas persegi panjang. Jawaban yang diberikan cukup bagus, ada penjelasan tentang parameter yang digunakan, ada juga contoh pemanggilan fungsi tersebut.
+**GIF demo atau link video YouTube **
 
-Dari jawaban Genimi Code Assist —namanya juga panjang, saya malas nulisnya. Ganti aja jadi Gen—, saya tahu cara membuat kode kita modular dan dapat digunakan kembali di berbagai bagian aplikasi tanpa ditulis ulang dengan menggunakan module.exports. Contoh penggunaanya seperti di bawah ini:
+---
 
+### 🚀 Fitur Utama
 
-module.exports = {
-  calculateSquareArea,
-  calculateRectangleArea,
-  calculateTriangleArea,
-};
+-   **Upload & Drag-and-Drop:** Unggah foto dari perangkat atau seret langsung ke jendela browser.
+-   **Model Sampel:** Tidak punya foto? Coba fitur ini dengan model yang sudah kami sediakan.
+-   **Galeri Produk Dinamis:** Jelajahi berbagai koleksi pakaian, termasuk yang terinspirasi dari kekayaan kriya Indonesia seperti Batik dan Tenun.
+-   **Virtual Try-On Berbasis AI:** Didukung oleh **Amazon Bedrock (model Amazon Nova Canvas)**, yang secara cerdas mengganti pakaian pada foto pengguna dengan tetap mempertahankan wajah, pose, dan latar belakang asli.
+-   **Tampilan Perbandingan:** Lihat hasil "Before" dan "After" secara berdampingan.
+-   **Download & Share:** Simpan hasil VTO favoritmu atau bagikan ke media sosial.
+-   **Desain Responsif:** Tampilan yang optimal di perangkat desktop maupun mobile.
 
-dengan menggunakan module.exports itu, kita bisa menggunakan ke-3 fungsi yang sudah kita deklarasikan di file selain index.js. Kalo misalnya kita punya file app.js, di direktori yang sama. Kita bisa menggunakan fungsi dari index,js seperti ini:
+---
 
+### 🏛️ Arsitektur Teknologi
 
-// Mengimpor fungsi-fungsi yang diekspor dari index.js
-const shapeCalculators = require('./index.js');
+Solusi ini dibangun di atas arsitektur **100% serverless** di AWS, memastikan skalabilitas, efisiensi biaya, dan kecepatan pengembangan.
 
-// Sekarang Anda bisa menggunakan fungsi-fungsi tersebut
-const side = 10;
-const squareArea = shapeCalculators.calculateSquareArea(side);
+```
+Pengguna (Browser)
+      |
+      |-- Unggah Gambar (user + pakaian) --> [ Amazon API Gateway ]
+      |                                           | (Endpoint RESTful)
+      |                                           |
+      '-- Terima Hasil Gambar <-- [ AWS Lambda (Node.js) ] <--'
+                                                  |
+                                                  |-- 1. Panggil Amazon Rekognition (Validasi Wajah)
+                                                  |
+                                                  '-- 2. Panggil Amazon Bedrock (Model Nova Canvas)
+```
 
-console.log(`Luas persegi dengan sisi ${side} adalah `); // Output: Luas persegi dengan sisi 10 adalah 100
+#### Layanan AWS yang Digunakan:
+-   **Amazon Bedrock:** Sebagai mesin AI utama, menggunakan model `amazon.nova-canvas-v1:0` untuk melakukan Virtual Try-On dengan fitur deteksi pakaian otomatis (`maskType: "GARMENT"`).
+-   **AWS Lambda:** Menjadi otak back-end yang menjalankan logika bisnis dalam Node.js. Fungsi ini memproses gambar, membuat payload, memanggil API Bedrock, dan mengembalikan hasilnya.
+-   **Amazon API Gateway:** Menyediakan endpoint HTTP yang aman dan terkelola untuk menghubungkan aplikasi front-end dengan fungsi Lambda.
+-   **IAM (Identity and Access Management):** Mengatur izin akses yang aman antara layanan AWS, memastikan Lambda hanya dapat mengakses sumber daya yang diperlukan.
+-   **Amazon CloudWatch:** Digunakan untuk logging dan monitoring, sangat krusial selama proses debugging untuk melacak error dan kinerja fungsi Lambda.
 
-const length = 8;
-const width = 5;
-const rectangleArea = shapeCalculators.calculateRectangleArea(length, width);
+---
 
-console.log(`Luas persegi panjang dengan panjang  dan lebar  adalah `); // Output: Luas persegi panjang dengan panjang 8 dan lebar 5 adalah 40.
+### 🇮🇩 Kontribusi untuk Ekonomi Kreatif (EKRAF)
 
-Singkatnya, module.exports adalah cara untuk membuat kode Anda modular dan dapat digunakan kembali di berbagai bagian aplikasi kita.
+Proyek ini secara langsung mendukung subsektor **Fashion dan Kriya** dengan:
+-   **Memberdayakan UMKM:** Menyediakan teknologi canggih untuk membantu brand fashion lokal bersaing di pasar digital.
+-   **Mempromosikan Budaya:** Menjadi etalase digital untuk fashion yang terinspirasi dari budaya Indonesia seperti Batik dan Tenun, membuatnya lebih mudah diakses dan dicoba oleh pasar yang lebih luas.
+-   **Mengurangi Limbah:** Berpotensi mengurangi tingkat pengembalian produk fashion online, yang berdampak positif pada jejak karbon dari logistik.
 
-
-
-## Belajar Javascript
-
-Untuk menjalan source code atau program Javascript, kita butuh yang namanya runtime environment. Ada dua runtime envi yang bisa kita gunakan, yaitu node dan bun.
-Kita bisa menjalankan aplikasi dengan mengetik node [file.js]. Kalo dengan bun, kita bisa menggunakan bun run [file.js] atau bisa hanya dengan menggunakan bun [file.js]. Command itu bisa digunakan di terminal untuk menjalankan program Javascript yang telah kita buat.
-Untuk menjalankan runtime kita juga bisa menggunakan REPL atau Read-Eval-Print-Loop untuk langsung mengetik kode yang akan dijalankan di runtime tadi. Kita tidak perlu menaruhnya dalam sebuah script untuk menjalankan perintah itu.
-
-
-
-***KARENA TERLALU LAMA, AKHIRNYA SAYA MEMUTUSKAN UNTUK LANGSUNG MERAKIT WEBSITE VTO KU***
-
-
+---
+Dibuat dengan ❤️ oleh **Bukan Boboiboy**
