@@ -20,6 +20,11 @@ body {
     place-items: center;
     min-height: 100vh;
     padding: 1rem;
+    user-select: none;
+    -webkit-user-select: none; /* Untuk browser Safari */
+    -moz-user-select: none;    /* Untuk browser Firefox */
+    -ms-user-select: none;     /* Untuk browser Internet Explorer/Edge lama */
+
 }
 
 .background-gradient {
