@@ -8,12 +8,6 @@ Coba baju favoritmu tanpa harus ke fitting room! Aplikasi web inovatif ini memun
 
 ---
 
-### ✨ Demo Aplikasi
-
-**GIF demo atau link video YouTube **
-
----
-
 ### 🚀 Fitur Utama
 
 -   **Upload & Drag-and-Drop:** Unggah foto dari perangkat atau seret langsung ke jendela browser.
@@ -60,4 +54,4 @@ Proyek ini secara langsung mendukung subsektor **Fashion dan Kriya** dengan:
 -   **Mengurangi Limbah:** Berpotensi mengurangi tingkat pengembalian produk fashion online, yang berdampak positif pada jejak karbon dari logistik.
 
 ---
-Dibuat dengan ❤️ oleh **Bukan Boboiboy**
+**Bukan Boboiboy**
