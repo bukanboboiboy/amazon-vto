@@ -128,38 +128,79 @@ body::before {
 }
 
 .upload-area {
-    background-color: #F8F7FF;
+    background: linear-gradient(135deg, rgba(255, 138, 0, 0.05), rgba(229, 46, 113, 0.05));
     border: 2px dashed var(--border-color);
     border-radius: 16px;
-    padding: 3rem;
+    padding: 3rem 2rem;
     text-align: center;
-    transition: border-color 0.3s;
+    transition: all 0.3s;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    min-height: 320px;
 }
 
 .upload-area.dragover {
     border-color: var(--primary-accent-color);
+    background: linear-gradient(135deg, rgba(255, 138, 0, 0.1), rgba(229, 46, 113, 0.1));
+    transform: scale(1.02);
+}
+
+.upload-dropzone-icon {
+    font-size: 4.5rem;
+    margin-bottom: 0.5rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.upload-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-text-color);
+    margin: 0;
+}
+
+.upload-description {
+    color: var(--secondary-text-color);
+    font-size: 0.95rem;
+    margin: 0;
+    max-width: 280px;
 }
 
 .upload-button {
     background: linear-gradient(90deg, var(--primary-accent-color), var(--secondary-accent-color));
     color: white;
     border: none;
-    padding: 1rem 2rem;
-    border-radius: 12px;
-    font-size: 1rem;
+    padding: 0.9rem 2rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin: 0 auto;
-    transition: transform 0.2s;
+    margin-top: 0.5rem;
+    transition: all 0.3s;
     font-family: inherit;
 }
 
 .upload-button:hover {
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 138, 0, 0.3);
 }
 
 .upload-area p {
@@ -175,7 +216,9 @@ body::before {
 .sample-models p {
     font-weight: 600;
     margin-bottom: 1rem;
+    color: var(--primary-text-color);
 }
+
 
 .sample-images {
     display: flex;
