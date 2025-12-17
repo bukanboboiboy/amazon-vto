@@ -24,6 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const editorProductGallery = document.getElementById('editorProductGallery');
     const generateBtn = document.getElementById('generateBtn');
 
+    // Custom Clothing Upload Elements
+    const customClothingInput = document.getElementById('customClothingInput');
+    const uploadCustomClothingBtn = document.getElementById('uploadCustomClothingBtn');
+    const customClothingPreview = document.getElementById('customClothingPreview');
+    const customClothingImage = document.getElementById('customClothingImage');
+    const removeCustomClothing = document.getElementById('removeCustomClothing');
+    const customDropzone = document.getElementById('customClothingDropzone');
+
     // Elemen Hasil
     const resultBeforeImage = document.getElementById('resultBeforeImage');
     const resultAfterImage = document.getElementById('resultAfterImage');
@@ -41,7 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Variabel Global
     let userImageFile = null;
     let selectedClothingElement = null;
-    
+    let customClothingFile = null;
+
     // === Bagian 2: Manajemen Halaman (View) ===
     const showView = (viewId) => {
         views.forEach(view => {
@@ -95,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         reader.readAsDataURL(file);
     };
-    
+
     async function base64ToFile(base64, filename, mimeType) {
         const res = await fetch(`data:${mimeType};base64,${base64}`);
         const blob = await res.blob();
@@ -130,8 +139,8 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         fullscreenDropOverlay.classList.remove('visible');
         if (e.dataTransfer.files.length > 0) {
-        // Gunakan fungsi yang sudah ada untuk memproses file
-        handleImageUpload(e.dataTransfer.files[0]);
+            // Gunakan fungsi yang sudah ada untuk memproses file
+            handleImageUpload(e.dataTransfer.files[0]);
         }
     });
 
@@ -152,28 +161,93 @@ document.addEventListener('DOMContentLoaded', () => {
         fileInput.value = '';
         showView('upload-view');
     });
-    
+
+    // Custom Clothing Upload Handlers
+    uploadCustomClothingBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        customClothingInput.click();
+    });
+
+    // Make entire dropzone clickable
+    if (customDropzone) {
+        customDropzone.addEventListener('click', () => customClothingInput.click());
+
+        // Drag and drop support
+        customDropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            customDropzone.classList.add('dragover');
+        });
+
+        customDropzone.addEventListener('dragleave', () => {
+            customDropzone.classList.remove('dragover');
+        });
+
+        customDropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            customDropzone.classList.remove('dragover');
+
+            if (e.dataTransfer.files.length > 0) {
+                const file = e.dataTransfer.files[0];
+                if (file.type.startsWith('image/')) {
+                    handleCustomClothingUpload(file);
+                }
+            }
+        });
+    }
+
+    customClothingInput.addEventListener('change', () => {
+        if (customClothingInput.files.length > 0) {
+            handleCustomClothingUpload(customClothingInput.files[0]);
+        }
+    });
+
+    function handleCustomClothingUpload(file) {
+        customClothingFile = file;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            customClothingImage.src = e.target.result;
+            customClothingPreview.style.display = 'flex';
+            if (customDropzone) customDropzone.style.display = 'none';
+
+            // Deselect any gallery items
+            document.querySelectorAll('.baju-pilihan').forEach(el => el.classList.remove('terpilih'));
+            selectedClothingElement = null;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    removeCustomClothing.addEventListener('click', () => {
+        customClothingFile = null;
+        customClothingInput.value = '';
+        customClothingPreview.style.display = 'none';
+        customClothingImage.src = '';
+        if (customDropzone) customDropzone.style.display = 'flex';
+    });
+
     generateBtn.addEventListener('click', async () => {
-        if (!userImageFile || !selectedClothingElement) {
-            alert('Please upload a photo and choose an outfit!');
+        if (!userImageFile || (!selectedClothingElement && !customClothingFile)) {
+            alert('Please upload a photo and choose an outfit or upload custom clothing!');
             return;
         }
 
         loadingModal.classList.add('visible');
-        
+
         try {
             const userImageBase64 = await processImage(userImageFile);
-            const clothingImageBase64 = await processImage(selectedClothingElement);
+            // Use custom clothing if available, otherwise use selected gallery item
+            const clothingSource = customClothingFile || selectedClothingElement;
+            const clothingImageBase64 = await processImage(clothingSource);
 
             const payload = { userImage: userImageBase64, clothingImage: clothingImageBase64 };
             const apiUrl = 'https://2vf4avt2ih.execute-api.us-east-1.amazonaws.com/generate-vto';
-            
+
             const response = await fetch(apiUrl, {
                 method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'application/json' }
             });
 
             const result = await response.json();
-            
+
             if (response.ok && result.imageResult) {
                 resultAfterImage.src = `data:image/png;base64,${result.imageResult}`;
                 showView('result-view');
@@ -193,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingModal.classList.remove('visible');
         }
     });
-    
+
     downloadBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         if (resultAfterImage.src && resultAfterImage.src.startsWith('data:')) {
@@ -207,9 +281,9 @@ document.addEventListener('DOMContentLoaded', () => {
             URL.revokeObjectURL(url);
         }
     });
-    
+
     tryAnotherBtn.addEventListener('click', () => showView('editor-view'));
-    
+
     shareBtn.addEventListener('click', async () => {
         if (navigator.share && resultAfterImage.src) {
             try {
@@ -229,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // === Bagian 5: Inisialisasi Galeri & Halaman ===
-    const daftarBaju = [ "1.png","2.png","3.png","4.png","5.png","6.png","7.png","8.png","9.png","10.png","20250923_2020_Denim on Display_simple_compose_01k5v89a7vfc78ksaf0vexagjs.png", "20250923_2020_Denim on Display_simple_compose_01k5v89a7xfhkbetbm161tbc2k.png", "20250923_2024_Black Bomber Jacket_simple_compose_01k5v8ghs4frt9k9tfxtbm6pbs.png", "20250923_2025_Red Shirt Display_simple_compose_01k5v8jgyfer99nh7mjak1j0dv.png", "20250923_2027_Long Sleeve Elegance_simple_compose_01k5v8mh7sev79ep99ts3whkep.png", "20250923_2029_Red Flannel Shirt_simple_compose_01k5v8rjabekpschrcsgfqvasx.png", "20250923_2030_Black Blazer Elegance_simple_compose_01k5v8vbq5fegv21g47yxxtaes.png", "Gemini_Generated_Image_5qsly5qsly5qsly5.png", "Gemini_Generated_Image_l4rczxl4rczxl4rc.png", "Gemini_Generated_Image_o1vmilo1vmilo1vm.png", "Gemini_Generated_Image_x0176ox0176ox017.png", "Gemini_Generated_Image_xhvefvxhvefvxhve.png", "Gemini_Generated_Image_yxhehoyxhehoyxhe.png" ];
+    const daftarBaju = ["1.png", "2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png", "10.png", "20250923_2020_Denim on Display_simple_compose_01k5v89a7vfc78ksaf0vexagjs.png", "20250923_2020_Denim on Display_simple_compose_01k5v89a7xfhkbetbm161tbc2k.png", "20250923_2024_Black Bomber Jacket_simple_compose_01k5v8ghs4frt9k9tfxtbm6pbs.png", "20250923_2025_Red Shirt Display_simple_compose_01k5v8jgyfer99nh7mjak1j0dv.png", "20250923_2027_Long Sleeve Elegance_simple_compose_01k5v8mh7sev79ep99ts3whkep.png", "20250923_2029_Red Flannel Shirt_simple_compose_01k5v8rjabekpschrcsgfqvasx.png", "20250923_2030_Black Blazer Elegance_simple_compose_01k5v8vbq5fegv21g47yxxtaes.png", "Gemini_Generated_Image_5qsly5qsly5qsly5.png", "Gemini_Generated_Image_l4rczxl4rczxl4rc.png", "Gemini_Generated_Image_o1vmilo1vmilo1vm.png", "Gemini_Generated_Image_x0176ox0176ox017.png", "Gemini_Generated_Image_xhvefvxhvefvxhve.png", "Gemini_Generated_Image_yxhehoyxhehoyxhe.png"];
 
     daftarBaju.forEach(namaFile => {
         const img = document.createElement('img');
@@ -241,6 +315,13 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.baju-pilihan').forEach(el => el.classList.remove('terpilih'));
             img.classList.add('terpilih');
             selectedClothingElement = img;
+
+            // Clear custom clothing when selecting from gallery
+            customClothingFile = null;
+            customClothingInput.value = '';
+            customClothingPreview.style.display = 'none';
+            customClothingImage.src = '';
+            if (customDropzone) customDropzone.style.display = 'flex';
         });
         editorProductGallery.appendChild(img);
     });
@@ -252,10 +333,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     showView('upload-view'); // Mulai dari halaman upload
     initHomeComparisonSlider();
-    
+
 });
-    // Tambahkan fungsi ini di paling bawah script.js
-    function initHomeComparisonSlider() {
+// Tambahkan fungsi ini di paling bawah script.js
+function initHomeComparisonSlider() {
     const homeComparisonContainer = document.getElementById("homeComparisonContainer");
     const homeAfterWrapper = document.querySelector(".home-after-wrapper");
     const homeSliderHandle = document.querySelector(".home-slider-handle");

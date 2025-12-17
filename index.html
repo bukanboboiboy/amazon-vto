@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div id="fullscreen-drop-overlay" class="drop-overlay">
         <div class="drop-overlay-content">
@@ -23,7 +25,7 @@
 
     <div class="background-gradient"></div>
     <div class="decorative-icons">
-        </div>
+    </div>
 
     <main class="app-container">
         <section id="upload-view" class="app-view active">
@@ -45,7 +47,13 @@
                     <div id="drop-area" class="upload-area">
                         <input type="file" id="fileInput" accept="image/*" hidden>
                         <button id="uploadButton" class="upload-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="17 8 12 3 7 8" />
+                                <line x1="12" x2="12" y1="3" y2="15" />
+                            </svg>
                             Upload Image
                         </button>
                         <p>or drop a file</p>
@@ -53,13 +61,109 @@
                     <div class="sample-models">
                         <p>Don't have a model? Try these models:</p>
                         <div class="sample-images">
-                            <img src="assets/image/9b9ccf26-84e9-4172-b1f8-10918d72189a.webp" alt="Sample Model 1" class="sample-image" data-src="assets/image/9b9ccf26-84e9-4172-b1f8-10918d72189a.png">
-                            <img src="assets/image/adc48c03-c035-411b-8da1-5124a972b121.webp" alt="Sample Model 2" class="sample-image" data-src="assets/image/adc48c03-c035-411b-8da1-5124a972b121.png">
-                            <img src="assets/image/Gemini_Generated_Image_7oq9dq7oq9dq7oq9.webp" alt="Sample Model 3" class="sample-image" data-src="assets/image/Gemini_Generated_Image_7oq9dq7oq9dq7oq9.png">
+                            <img src="assets/image/9b9ccf26-84e9-4172-b1f8-10918d72189a.webp" alt="Sample Model 1"
+                                class="sample-image" data-src="assets/image/9b9ccf26-84e9-4172-b1f8-10918d72189a.png">
+                            <img src="assets/image/adc48c03-c035-411b-8da1-5124a972b121.webp" alt="Sample Model 2"
+                                class="sample-image" data-src="assets/image/adc48c03-c035-411b-8da1-5124a972b121.png">
+                            <img src="assets/image/Gemini_Generated_Image_7oq9dq7oq9dq7oq9.webp" alt="Sample Model 3"
+                                class="sample-image"
+                                data-src="assets/image/Gemini_Generated_Image_7oq9dq7oq9dq7oq9.png">
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Stats Section -->
+            <div class="stats-section">
+                <div class="stat-item">
+                    <div class="stat-number">23+</div>
+                    <div class="stat-label">Clothing Options</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">AI</div>
+                    <div class="stat-label">Powered by AWS</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">
+                        < 20s</div>
+                            <div class="stat-label">Processing Time</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Serverless</div>
+                    </div>
+                </div>
+
+                <!-- How It Works Section -->
+                <div class="how-it-works-section">
+                    <h2>How It Works</h2>
+                    <div class="steps-container">
+                        <div class="step-item">
+                            <div class="step-icon">📸</div>
+                            <div class="step-number">01</div>
+                            <h3>Upload Your Photo</h3>
+                            <p>Choose a clear photo of yourself or select from our sample models</p>
+                        </div>
+                        <div class="step-arrow">→</div>
+                        <div class="step-item">
+                            <div class="step-icon">👔</div>
+                            <div class="step-number">02</div>
+                            <h3>Select Clothing</h3>
+                            <p>Browse through our collection of 23+ clothing items including Batik & Tenun</p>
+                        </div>
+                        <div class="step-arrow">→</div>
+                        <div class="step-item">
+                            <div class="step-icon">✨</div>
+                            <div class="step-number">03</div>
+                            <h3>See The Magic</h3>
+                            <p>Our AI generates a realistic try-on result in under 20 seconds</p>
+                        </div>
+                        <div class="step-arrow">→</div>
+                        <div class="step-item">
+                            <div class="step-icon">💾</div>
+                            <div class="step-number">04</div>
+                            <h3>Download & Share</h3>
+                            <p>Save your result or share it with friends on social media</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features Section -->
+                <div class="features-section">
+                    <h2>Why Choose Our Virtual Try-On?</h2>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">🤖</div>
+                            <h3>AI-Powered</h3>
+                            <p>Leveraging Amazon Bedrock's Nova Canvas model for ultra-realistic results</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🇮🇩</div>
+                            <h3>Indonesian Fashion</h3>
+                            <p>Featuring traditional Batik and Tenun designs to promote local artisans</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">⚡</div>
+                            <h3>Lightning Fast</h3>
+                            <p>Get your results in under 20 seconds with our serverless architecture</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">📱</div>
+                            <h3>Responsive Design</h3>
+                            <p>Works seamlessly on desktop, tablet, and mobile devices</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🔒</div>
+                            <h3>Privacy First</h3>
+                            <p>Your images are processed securely and not stored permanently</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🌱</div>
+                            <h3>Eco-Friendly</h3>
+                            <p>Reduce returns and carbon footprint with virtual try-ons</p>
+                        </div>
+                    </div>
+                </div>
         </section>
 
         <section id="editor-view" class="app-view">
@@ -68,18 +172,63 @@
                     <img id="editorUserImage" src="" alt="User preview">
                     <div class="editor-actions">
                         <button id="reuploadBtn" title="Unggah Ulang">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="17 8 12 3 7 8" />
+                                <line x1="12" x2="12" y1="3" y2="15" />
+                            </svg>
                         </button>
                         <button id="deleteBtn" title="Hapus Gambar">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6" />
+                                <path
+                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                <line x1="10" x2="10" y1="11" y2="17" />
+                                <line x1="14" x2="14" y1="11" y2="17" />
+                            </svg>
                         </button>
                     </div>
                 </div>
                 <div class="editor-selection-panel">
                     <h2>Select Clothing</h2>
-                    <p>Click on one of the items below.</p>
-                    <div id="editorProductGallery" class="product-gallery">
+                    <p>Click on one of the items below, or upload your own.</p>
+
+                    <!-- Custom Clothing Upload -->
+                    <div class="custom-clothing-upload">
+                        <input type="file" id="customClothingInput" accept="image/*" hidden>
+
+                        <div id="customClothingDropzone" class="custom-dropzone">
+                            <div class="dropzone-icon">👕</div>
+                            <h4>Upload Your Own Clothing</h4>
+                            <p>Drag and drop or click to browse</p>
+                            <button id="uploadCustomClothingBtn" class="custom-upload-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" x2="12" y1="3" y2="15" />
+                                </svg>
+                                Browse Files
+                            </button>
                         </div>
+
+                        <div id="customClothingPreview" class="custom-clothing-preview" style="display: none;">
+                            <img id="customClothingImage" src="" alt="Custom clothing">
+                            <button id="removeCustomClothing" class="remove-custom-btn" title="Remove">×</button>
+                        </div>
+                    </div>
+
+                    <div class="section-divider">
+                        <span>OR CHOOSE FROM GALLERY</span>
+                    </div>
+
+                    <div id="editorProductGallery" class="product-gallery">
+                    </div>
                     <button id="generateBtn" class="cta-button">Let's see the magic</button>
                 </div>
             </div>
@@ -107,7 +256,7 @@
 
 
     </main>
-    
+
     <div id="loadingModal" class="modal-overlay">
         <div class="modal-content">
             <div class="spinner"></div>
@@ -115,7 +264,7 @@
             <p>Please wait, this process may take up to 20 seconds.</p>
         </div>
     </div>
-    
+
     <div id="errorModal" class="modal-overlay">
         <div class="modal-content error">
             <div class="error-icon">⚠️</div>
@@ -124,7 +273,8 @@
             <button id="errorCloseBtn" class="error-close-btn">Try Again</button>
         </div>
     </div>
-    
+
     <script src="script.js"></script>
 </body>
+
 </html>
